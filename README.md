@@ -1,3 +1,5 @@
+Here is the updated `README.md` configured to match your exact database name (`clinic_ops_db`) and your workspace file names (`1_init_db.sql`, `2_schema.sql`, `3_trigger.sql`, `seed_data.py`, `4_analytices.sql`, `ClincERD.png`):
+
 ```markdown
 # Multi-Branch Clinic Appointment & Financial Settlement Ledger
 
@@ -38,7 +40,7 @@ The schema models 10 distinct entities spanning **Clinic Infrastructure**, **Cli
 
 ### Entity-Relationship Diagram
 
-![Clinic Appointment Ledger ERD](erd.png)
+![Clinic Appointment Ledger ERD](ClincERD.png)
 
 ### Key Architectural Highlights:
 * **Anti-Collision Guard:** State-checked `BEFORE INSERT/UPDATE` triggers calculate temporal overlap via `(start_time < NEW.end_time AND end_time > NEW.start_time)` across doctors and rooms simultaneously, returning custom `SQLSTATE 45000` exceptions on conflict.
@@ -140,12 +142,14 @@ ORDER BY b.name, DAYOFWEEK(a.start_time);
 
 ## 🚀 Quickstart & Reproduction
 
-### 1. Database Setup
+### 1. Database Initialization & Schema
 
-Execute the initialization and schema scripts in your MySQL client:
+Execute the setup, schema, and trigger scripts in your MySQL client:
 
 ```bash
-mysql -u root -p < 01_schema.sql
+mysql -u root -p < 1_init_db.sql
+mysql -u root -p clinic_ops_db < 2_schema.sql
+mysql -u root -p clinic_ops_db < 3_trigger.sql
 
 ```
 
@@ -155,7 +159,7 @@ Install dependencies and run the batch insertion script:
 
 ```bash
 pip install mysql-connector-python faker
-python 02_seed_data.py
+python seed_data.py
 
 ```
 
@@ -164,7 +168,24 @@ python 02_seed_data.py
 Run the business reporting suite:
 
 ```bash
-mysql -u root -p clinic_db < 03_analytics.sql
+mysql -u root -p clinic_ops_db < 4_analytices.sql
+
+```
+
+---
+
+## 📁 Repository Structure
+
+```text
+.
+├── 1_init_db.sql        # Database initialization (clinic_ops_db)
+├── 2_schema.sql         # Table definitions, constraints, and B-tree indexes
+├── 3_trigger.sql        # Anti-collision and audit trail triggers
+├── 4_analytices.sql     # Executive KPIs and reporting queries
+├── ClincERD.drawio      # Editable draw.io diagram file
+├── ClincERD.png         # Exported ERD image for documentation
+├── seed_data.py         # Batch generator for 50k+ records
+└── README.md            # Project documentation and architecture guide
 
 ```
 
@@ -173,10 +194,13 @@ mysql -u root -p clinic_db < 03_analytics.sql
 ## 🛠️ Tech Stack & Concepts Demonstrated
 
 * **RDBMS:** MySQL 8.0+ (InnoDB Engine)
+* **Database:** `clinic_ops_db`
 * **Design Patterns:** Third Normal Form (3NF), Temporal Interval Locking, Append-Only Audit Logging, Double-Entry Settlement
 * **Optimization:** Composite B-Tree Indexing (`doctor_id`, `start_time`, `end_time`), Query Profiling via `EXPLAIN`
 * **Tooling:** Python (Data Ingestion), Faker, draw.io (ERD Modeling)
 
 ```
+
+*(Note: In your folder, export `ClincERD.drawio` as `ClincERD.png` so the image renders properly in the preview)[cite: 5].*
 
 ```
