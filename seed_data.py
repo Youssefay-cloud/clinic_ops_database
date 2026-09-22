@@ -11,7 +11,7 @@ fake = Faker()
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "yoyo",  # <-- Replace with your MySQL password
+    "password": "your password",  
     "database": "clinic_ops_db",
     "port": 3306,
 }
